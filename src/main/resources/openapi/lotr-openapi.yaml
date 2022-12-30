@@ -1,0 +1,196 @@
+openapi: 3.0.3
+info:
+  title: "LOTR OpenAPI Specification"
+  description: |
+    LOTR OpenAPI Specification.
+  version: 1.0.0-SNAPSHOT
+servers:
+  - url: https://lotr.local/
+security:
+  - bearerAuth: []
+paths:
+  /movie:
+    get:
+      operationId: getMovies
+      description: Gets the list of LOTR movies.
+      tags:
+        - movie
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: params
+          in: query
+          schema:
+            type: object
+            additionalProperties: true
+          style: form
+          explode: true
+      responses:
+        200:
+          description: The list of LOTR movies.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Movie'
+  /movie/{id}:
+    get:
+      operationId: getMovie
+      description: Gets details for the movie with the provided id.
+      tags:
+        - movie
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Details for the movie with the provided id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+  /movie/{id}/quote:
+    get:
+      operationId: getQuotes
+      description: Gets movie quotes from the movie with the provided id.
+      tags:
+        - movie
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: params
+          in: query
+          schema:
+            type: object
+            additionalProperties: true
+          style: form
+          explode: true
+      responses:
+        200:
+          description: A quote from the movie with the provided id.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Quote'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Movie:
+      type: object
+      required:
+        - name
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        runtimeInMinutes:
+          type: number
+        budgetInMillions:
+          type: number
+        boxOfficeRevenueInMillions:
+          type: number
+        academyAwardNominations:
+          type: number
+        academyAwardWins:
+          type: number
+        rottenTomatoesScore:
+          type: number
+    Quote:
+      type: object
+      required:
+        - dialog
+      properties:
+        _id:
+          type: string
+        dialog:
+          type: string
+        movie:
+          type: string
+        character:
+          type: string
+    Character:
+      type: object
+      required:
+        - name
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        race:
+          type: string
+        wikiUrl:
+          type: string
+        birth:
+          type: string
+        gender:
+          type: string
+        death:
+          type: string
+        hair:
+          type: string
+        height:
+          type: string
+        realm:
+          type: string
+        spouse:
+          type: string
+
